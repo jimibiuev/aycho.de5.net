@@ -1,0 +1,65 @@
+/* AYCHO module: css/skill-ext | owner: C | contract: v1 */
+/* 技能扩展 UI：输入栏技能按钮 + 全屏确认页（不用小弹窗） */
+
+.ax-skill-slot { display: inline-flex; align-items: center; gap: 6px; }
+
+.ax-skill-btn {
+  width: 34px; height: 34px; flex: 0 0 auto;
+  display: grid; place-items: center;
+  border: 1px solid color-mix(in srgb, currentColor 14%, transparent);
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 8%, transparent);
+  color: inherit; cursor: pointer; padding: 0;
+  transition: background .18s ease, transform .18s ease, color .18s ease;
+}
+.ax-skill-btn:hover { background: color-mix(in srgb, currentColor 16%, transparent); }
+.ax-skill-btn:active { transform: scale(.94); }
+.ax-skill-btn svg { display: block; }
+
+.ax-skill-btn.is-rec {
+  background: #ef4444; border-color: #ef4444; color: #fff;
+  animation: ax-skill-pulse 1.1s ease-in-out infinite;
+}
+.ax-skill-btn.is-danger { color: #f87171; }
+@keyframes ax-skill-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, .55); }
+  50% { box-shadow: 0 0 0 7px rgba(239, 68, 68, 0); }
+}
+
+/* 全屏确认页：占满整个视口，等同子标题页，不用居中浮层弹窗 */
+.ax-sk-confirm {
+  position: fixed; inset: 0; z-index: 2147483000;
+  background: var(--ax-bg, #0b0d12);
+  display: flex; flex-direction: column;
+  overflow: auto;
+  animation: ax-sk-in .16s ease-out;
+}
+@keyframes ax-sk-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+.ax-sk-confirm__box {
+  width: 100%; max-width: 720px; margin: 0 auto;
+  padding: max(28px, env(safe-area-inset-top)) 22px 40px;
+  display: flex; flex-direction: column; gap: 12px;
+  color: var(--ax-fg, #e7eaf3);
+}
+.ax-sk-confirm__tag {
+  align-self: flex-start;
+  font-size: 12px; line-height: 1; padding: 6px 10px; border-radius: 999px;
+  background: color-mix(in srgb, var(--ax-accent, #7c9cff) 22%, transparent);
+  color: var(--ax-accent, #7c9cff);
+}
+.ax-sk-confirm__tag.is-danger { background: rgba(239, 68, 68, .18); color: #f87171; }
+.ax-sk-confirm__title { font-size: 20px; font-weight: 700; margin: 6px 0 0; line-height: 1.35; }
+.ax-sk-confirm__desc { font-size: 14px; line-height: 1.6; opacity: .78; }
+.ax-sk-confirm__act {
+  border: 1px solid rgba(148, 163, 184, .22); border-radius: 12px;
+  padding: 12px 14px; background: rgba(148, 163, 184, .08);
+}
+.ax-sk-confirm__act code { font-size: 13px; word-break: break-all; }
+.ax-sk-confirm__row { display: flex; gap: 12px; margin-top: 18px; }
+.ax-sk-confirm__row button {
+  flex: 1; min-height: 46px; border-radius: 12px; font-size: 15px; cursor: pointer;
+  border: 1px solid rgba(148, 163, 184, .26); background: rgba(148, 163, 184, .12); color: inherit;
+}
+.ax-sk-confirm__yes { background: var(--ax-accent, #7c9cff); border-color: transparent; color: #0b0d12; font-weight: 600; }
+.ax-sk-confirm__yes.is-danger { background: #ef4444; color: #fff; }

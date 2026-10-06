@@ -1,0 +1,140 @@
+/* AYCHO module: css/overlays-fullscreen | owner: C | contract: v1 */
+/* 把「预览 / 分享 / 选择器 / 结果」四类浮层统一改成占满全屏的子标题页：
+   不再有居中小弹窗、不再有右侧窄抽屉，打开即铺满视口，顶部标题栏常驻、叉号返回。 */
+
+/* 1) 底座：去掉压暗遮罩（全屏页不需要虚化背景） */
+.ov-scrim { display: none !important; }
+.ov-layer { background: var(--ax-bg, #0b0d12); }
+
+/* 2) 预览抽屉 -> 全屏页 */
+.ov-panel {
+  width: 100vw !important; max-width: 100vw !important;
+  height: 100% !important;
+  border-left: 0 !important; border-radius: 0 !important;
+  box-shadow: none !important;
+}
+.ov-grip { display: none !important; }
+
+/* 3) 分享浮层 -> 全屏页 */
+.ov-share {
+  left: 0 !important; top: 0 !important;
+  width: 100vw !important; max-width: 100vw !important;
+  height: 100% !important;
+  transform: translateY(14px) !important;
+  border: 0 !important; border-radius: 0 !important;
+  box-shadow: none !important;
+  overflow: auto !important;
+}
+.ov-layer.ov-open .ov-share { transform: none !important; opacity: 1 !important; }
+
+
+/* 5) 标题栏：吸顶 + 安全区，保持「返回」入口始终可见 */
+.ov-head,
+.ov-share-head {
+  position: sticky; top: 0; z-index: 6;
+  padding-top: max(10px, env(safe-area-inset-top, 0px));
+  background: color-mix(in srgb, var(--ax-bg, #212121) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+.ov-body { border-radius: 0 !important; }
+.ov-pane { padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+
+/* 6) 结果页 / 底部选择条：全屏化 */
+.ov-result {
+  position: absolute !important;
+  inset: 0 !important;
+  left: 0 !important; top: 0 !important; bottom: 0 !important;
+  width: 100vw !important; max-width: 100vw !important;
+  height: 100% !important;
+  transform: translateY(14px) !important;
+  border-radius: 0 !important; box-shadow: none !important;
+  overflow: auto !important;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+}
+.ov-layer.ov-open .ov-result { transform: none !important; opacity: 1 !important; }
+/* 选择器的底部操作条：保留功能，改为通栏贴底（不再是悬浮药丸） */
+.ov-picker-bar {
+  left: 0 !important; right: 0 !important; bottom: 0 !important;
+  width: 100% !important; max-width: 100% !important;
+  transform: none !important;
+  border-radius: 0 !important; border-left: 0 !important; border-right: 0 !important; border-bottom: 0 !important;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+}
+.ov-picker-bar.ov-open { transform: none !important; }
+
+/* 7) 通用弹窗（A.ui.modal / 确认框）→ 占满全屏的子标题页，叉号返回 */
+.rb-modal {
+  align-items: stretch !important; justify-content: flex-start !important;
+  padding: 0 !important; background: var(--ax-bg, #0b0d12) !important;
+}
+.rb-modal__card {
+  width: 100vw !important; max-width: 100vw !important;
+  height: 100% !important; max-height: 100% !important;
+  border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+  background: var(--ax-bg, #0b0d12) !important;
+}
+.rb-modal--in .rb-modal__card { transform: none !important; opacity: 1 !important; }
+.rb-modal__head {
+  position: sticky; top: 0; z-index: 6;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  background: color-mix(in srgb, var(--ax-bg, #0b0d12) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+.rb-modal__body { border-radius: 0 !important; }
+.rb-modal__foot { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; }
+
+/* 8) 设置类弹窗（st-modal：模型选择 / 危险确认等）→ 同样全屏 */
+.st-modal {
+  align-items: stretch !important; justify-content: flex-start !important;
+  padding: 0 !important; background: var(--ax-bg, #0b0d12) !important;
+}
+.st-modal-card {
+  width: 100vw !important; max-width: 100vw !important;
+  height: 100% !important; max-height: 100% !important;
+  border: 0 !important; border-radius: 0 !important; box-shadow: none !important;
+  transform: none !important;
+}
+.st-modal.st-open .st-modal-card { transform: none !important; }
+.st-modal-head {
+  position: sticky; top: 0; z-index: 6;
+  padding-top: max(12px, env(safe-area-inset-top, 0px));
+  background: color-mix(in srgb, var(--ax-bg, #0b0d12) 88%, transparent);
+  backdrop-filter: blur(14px);
+}
+.st-modal-body { border-radius: 0 !important; }
+.st-modal-foot { padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px)) !important; }
+
+/* 9) 预览页增强：改动对比（红绿 diff）、缩放读数、选中态按钮 */
+.ov-btn.ov-on,
+.ov-btn:hover { border-color: color-mix(in srgb, var(--ax-accent, #6ea8ff) 55%, transparent); color: var(--ax-text, #ececec); }
+.ov-btn.ov-on { background: color-mix(in srgb, var(--ax-accent, #6ea8ff) 18%, transparent); }
+.ov-zoom { min-width: 40px; text-align: center; font: 600 11px/1 var(--ax-font, system-ui, sans-serif); color: var(--ax-text-2, #a7b0c0); }
+
+.ov-diffhead {
+  display: flex; align-items: center; gap: 8px;
+  position: sticky; top: 0; z-index: 3;
+  padding: 10px 12px;
+  background: color-mix(in srgb, var(--ax-bg, #0b0d12) 90%, transparent);
+  backdrop-filter: blur(10px);
+}
+.ov-diff__tag {
+  padding: 3px 8px; border-radius: 999px;
+  border: 1px solid var(--ax-border, rgba(255,255,255,.10));
+  font: 600 11px/1 var(--ax-font, system-ui, sans-serif);
+  color: var(--ax-text-2, #a7b0c0);
+}
+.ov-diff__tag--add { color: #7ee0a1; border-color: rgba(126,224,161,.35); background: rgba(126,224,161,.10); }
+.ov-diff__tag--del { color: #ff8f8f; border-color: rgba(255,143,143,.35); background: rgba(255,143,143,.10); }
+
+.ov-diff { padding-bottom: 20px; }
+.ov-diff__row {
+  display: flex; gap: 8px; padding: 1px 12px;
+  font: 12px/1.65 var(--ax-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  white-space: pre-wrap; word-break: break-all;
+  color: var(--ax-text-2, #c3cad6);
+}
+.ov-diff__row--add { background: rgba(46,160,67,.16); color: #b7f5c9; }
+.ov-diff__row--del { background: rgba(248,81,73,.15); color: #ffc9c9; }
+.ov-diff__sign { flex: 0 0 12px; width: 12px; opacity: .85; }
+.ov-diff__txt { flex: 1 1 auto; }

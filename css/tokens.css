@@ -1,0 +1,229 @@
+/* ============================================================
+   AYCHO module: tokens  |  owner: A(main)  |  contract: v2
+   设计系统 v2：ChatGPT 式中性灰阶（去极光 / 去玻璃 / 去霓虹）
+   ============================================================ */
+:root {
+  color-scheme: dark;
+
+  /* ---------- 背景与层级表面（中性灰阶） ---------- */
+  --ax-bg: #212121;
+  --ax-bg-2: #171717;
+  --ax-bg-3: #0d0d0d;
+  --ax-surface: rgba(255, 255, 255, 0.05);
+  --ax-surface-2: rgba(255, 255, 255, 0.08);
+  --ax-surface-3: rgba(255, 255, 255, 0.12);
+  --ax-surface-solid: #2f2f2f;
+
+  /* 弱描边优先，主分隔用极弱实线 */
+  --ax-border: rgba(255, 255, 255, 0.12);
+  --ax-border-soft: rgba(255, 255, 255, 0.08);
+  --ax-border-strong: rgba(255, 255, 255, 0.18);
+  --ax-hairline: rgba(255, 255, 255, 0.07);
+
+  /* ---------- 文本 ---------- */
+  --ax-text: #ececec;
+  --ax-text-2: #b4b4b4;
+  --ax-text-3: #8e8e8e;
+  --ax-text-4: #6b6b6b;
+  --ax-text-disabled: #5d5d5d;
+
+  /* ---------- 交互主色：中性白（对齐 ChatGPT 深色态） ---------- */
+  --ax-accent: #ffffff;
+  --ax-accent-2: #d9d9d9;
+  --ax-accent-3: #b4b4b4;
+  --ax-accent-soft: rgba(255, 255, 255, 0.10);
+  --ax-accent-text: #ececec;
+
+  --ax-ok: #7bc47f;
+  --ax-warn: #d4a24a;
+  --ax-danger: #e2777a;
+  --ax-danger-soft: rgba(226, 119, 122, 0.14);
+
+  /* 背景装饰色板（极光层已停用，保留变量占位） */
+  --ax-aurora-1: #3a3a3a;
+  --ax-aurora-2: #333333;
+  --ax-aurora-3: #2e2e2e;
+  --ax-aurora-4: #363636;
+  --ax-aurora-5: #303030;
+
+  /* ---------- 阴影（柔和中性，不用发光） ---------- */
+  --ax-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.30);
+  --ax-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.28);
+  --ax-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.32);
+  --ax-shadow-lg: 0 10px 32px rgba(0, 0, 0, 0.38);
+  --ax-shadow-pop: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --ax-glow-accent: 0 0 0 1px rgba(255, 255, 255, 0.14);
+
+  /* ---------- 圆角（对齐 ChatGPT 视觉：12/16/24/999） ---------- */
+  --ax-r-xs: 6px;
+  --ax-r-sm: 10px;
+  --ax-r-md: 12px;
+  --ax-r-lg: 16px;
+  --ax-r-xl: 22px;
+  --ax-r-2xl: 28px;
+  --ax-r-pill: 999px;
+
+  /* ---------- 间距 ---------- */
+  --ax-s-1: 4px;
+  --ax-s-2: 8px;
+  --ax-s-3: 12px;
+  --ax-s-4: 16px;
+  --ax-s-5: 20px;
+  --ax-s-6: 24px;
+  --ax-s-8: 32px;
+  --ax-s-10: 40px;
+
+  /* ---------- 动效（更快、更短，减少炫技感） ---------- */
+  --ax-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ax-ease-in: cubic-bezier(0.4, 0, 1, 1);
+  --ax-ease-inout: cubic-bezier(0.65, 0, 0.35, 1);
+  --ax-ease-spring: cubic-bezier(0.34, 1.2, 0.64, 1);
+  --ax-dur-1: 100ms;
+  --ax-dur-2: 160ms;
+  --ax-dur-3: 240ms;
+  --ax-dur-4: 400ms;
+
+  /* ---------- 布局 ---------- */
+  --ax-left-w: 272px;
+  --ax-left-w-collapsed: 60px;
+  --ax-right-w: 396px;
+  --ax-right-w-collapsed: 0px;
+  --ax-topbar-h: 52px;
+  --ax-composer-max: 828px;
+
+  /* ---------- 字体 ---------- */
+  --ax-font: "OpenAI Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", system-ui, sans-serif;
+  --ax-font-mono: "JetBrains Mono", "SFMono-Regular", "Roboto Mono", Menlo, Consolas,
+    "DejaVu Sans Mono", "Liberation Mono", ui-monospace, monospace;
+
+  /* ---------- 层级 ---------- */
+  --ax-z-bg: 0;
+  --ax-z-bg-fx: 1;
+  --ax-z-content: 10;
+  --ax-z-side: 40;
+  --ax-z-drawer: 55;
+  --ax-z-overlay: 60;
+  --ax-z-modal: 80;
+  --ax-z-toast: 100;
+}
+
+/* ============================================================
+   通用基元（所有模块可用，类名前缀 ax-）
+   ============================================================ */
+* { box-sizing: border-box; }
+html, body { height: 100%; margin: 0; }
+body {
+  background: var(--ax-bg, #212121);
+  color: var(--ax-text, #ececec);
+  font-family: var(--ax-font, system-ui, sans-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+button, input, textarea, select { font: inherit; color: inherit; }
+button { cursor: pointer; background: none; border: 0; padding: 0; }
+a { color: var(--ax-text, #ececec); text-decoration: none; }
+
+:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.45);
+  outline-offset: 2px;
+  border-radius: var(--ax-r-xs, 6px);
+}
+
+/* 细滚动条 */
+.ax-scroll { scrollbar-width: thin; scrollbar-color: rgba(255,255,255,.16) transparent; }
+.ax-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.ax-scroll::-webkit-scrollbar-track { background: transparent; }
+.ax-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.13);
+  border-radius: var(--ax-r-pill, 999px);
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+.ax-scroll::-webkit-scrollbar-thumb:hover { background: rgba(255, 255, 255, 0.24); background-clip: content-box; }
+
+/* 面板（实色，不再用玻璃模糊） */
+.ax-glass {
+  background: var(--ax-surface-solid, #2f2f2f);
+  border: 1px solid var(--ax-border-soft, rgba(255,255,255,.08));
+  box-shadow: var(--ax-shadow-md);
+}
+
+/* 幽灵按钮 */
+.ax-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  height: 34px; padding: 0 12px; border-radius: var(--ax-r-sm, 10px);
+  color: var(--ax-text-2, #b4b4b4); background: transparent;
+  transition: background var(--ax-dur-1) var(--ax-ease-out),
+              color var(--ax-dur-1) var(--ax-ease-out),
+              transform var(--ax-dur-1) var(--ax-ease-out);
+}
+.ax-btn:hover { background: var(--ax-surface, rgba(255,255,255,.05)); color: var(--ax-text, #ececec); }
+.ax-btn:active { transform: scale(0.98); }
+.ax-btn--solid { background: var(--ax-surface-2, rgba(255,255,255,.08)); color: var(--ax-text, #ececec); }
+.ax-btn--primary { background: #ffffff; color: #0d0d0d; font-weight: 600; }
+.ax-btn--primary:hover { background: #ececec; }
+.ax-btn--danger { color: var(--ax-danger, #e2777a); }
+.ax-btn--danger:hover { background: var(--ax-danger-soft, rgba(226,119,122,.14)); }
+
+/* 输入 */
+.ax-input {
+  width: 100%; height: 38px; padding: 0 12px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--ax-border-soft, rgba(255,255,255,.08));
+  border-radius: var(--ax-r-sm, 10px); color: var(--ax-text, #ececec);
+  transition: border-color var(--ax-dur-2) var(--ax-ease-out),
+              box-shadow var(--ax-dur-2) var(--ax-ease-out),
+              background var(--ax-dur-2) var(--ax-ease-out);
+}
+.ax-input::placeholder { color: var(--ax-text-3, #8e8e8e); }
+.ax-input:focus {
+  outline: none; background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.28);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.08);
+}
+
+/* 徽标 / 标签 */
+.ax-tag {
+  display: inline-flex; align-items: center; gap: 4px; height: 20px; padding: 0 7px;
+  font-size: 11px; color: var(--ax-text-2, #b4b4b4);
+  background: var(--ax-surface, rgba(255,255,255,.05));
+  border-radius: var(--ax-r-pill, 999px);
+}
+
+/* 空状态 */
+.ax-empty {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; padding: 32px 20px; color: var(--ax-text-3, #8e8e8e);
+  font-size: 12.5px; text-align: center;
+}
+.ax-empty svg { opacity: .5; }
+
+/* ============================================================
+   共享关键帧
+   ============================================================ */
+@keyframes ax-spin { to { transform: rotate(360deg); } }
+@keyframes ax-fade-up { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+@keyframes ax-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ax-pop { from { opacity: 0; transform: scale(.96); } to { opacity: 1; transform: none; } }
+@keyframes ax-breathe { 0%,100% { opacity: .85; } 50% { opacity: 1; } }
+@keyframes ax-shimmer { 0% { background-position: -180% 0; } 100% { background-position: 180% 0; } }
+
+/* 骨架屏 */
+.ax-skel {
+  background: linear-gradient(90deg, rgba(255,255,255,.05) 25%, rgba(255,255,255,.11) 37%, rgba(255,255,255,.05) 63%);
+  background-size: 200% 100%;
+  animation: ax-shimmer 1.4s infinite linear;
+  border-radius: var(--ax-r-xs, 6px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+}

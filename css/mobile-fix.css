@@ -1,0 +1,115 @@
+/* ═══════════════════════════════════════════════════════════════════
+   AYCHO mobile fix pack —— 统一控件尺寸 / 左栏层级 / 移动端条状浮层收敛
+   引入位置：所有模块样式之后（最后一个 link），用于压过各模块的零散写法。
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* 1. 图标按钮统一：此前顶栏 / 设置 / 面板按钮混用 15/16/17/18px 的 svg 与
+      24–44px 不等的盒子，视觉上「一边大一边小、像没渲染完」。 */
+.ax-iconbtn, .rb-iconbtn, .st-icon-btn, .ax-inputwrap__act, .ax-conv__cog, .rb-bw__go {
+  display: inline-flex; align-items: center; justify-content: center; flex: none;
+}
+.ax-iconbtn svg, .rb-iconbtn svg, .st-icon-btn svg,
+.ax-topbar__actions svg, .st-panel button svg, .rb-btn svg {
+  width: 18px; height: 18px; flex: none;
+}
+@media (pointer: coarse) {
+  .ax-iconbtn, .rb-iconbtn, .st-icon-btn {
+    width: 40px; height: 40px; min-width: 40px; min-height: 40px; border-radius: 12px; padding: 0;
+  }
+  .ax-topbar { height: auto; min-height: 52px; }
+  .rb-bw__go { min-height: 40px; padding: 0 12px; gap: 6px; }
+}
+
+/* 2. 移动端左侧栏：置于最上层，绝不被任何遮罩压暗或吞点击 */
+@media (max-width: 900px) {
+  .ax-app.is-left-open-mobile .ax-leftbar { z-index: 70; }
+  .ax-leftbar { width: min(88vw, 320px); }
+}
+
+/* 3. 移动端设置页脚操作条：不做 sticky 半透明渐变浮层
+      （此前它只渲染出下半段，上缘一条由淡到深的色带，像「半张浮窗」）。 */
+@media (max-width: 900px) {
+  .st-foot {
+    position: static;
+    margin: 16px 0 0;
+    padding: 12px 0 calc(12px + env(safe-area-inset-bottom, 0px));
+    background: none;
+    border-top: 1px solid var(--ax-hairline, rgba(255,255,255,.055));
+  }
+}
+
+/* 4. 浮层/滚动容器不穿透 */
+.ax-scroll, .ax-menu, .st-panel, .rb-bw__marks { overscroll-behavior: contain; }
+
+/* 5. 移动端终端：底部常驻可见输入条。
+      此前输入层是覆盖全屏、opacity:0、pointer-events:none 的 textarea，
+      焦点被交给 xterm 的隐藏 textarea —— 手机上既看不见自己打的字，
+      IME 输入又有明显延迟，软键盘弹起还会触发重排，像「一输入就黑屏」。 */
+@media (max-width: 900px) {
+  .rb-term__input {
+    inset: auto 0 0 0; width: 100%; height: 46px; opacity: 1; pointer-events: auto;
+    padding: 0 12px; border-radius: 0; resize: none; overflow: hidden;
+    background: rgba(255,255,255,.05);
+    border-top: 1px solid var(--ax-hairline, rgba(255,255,255,.07));
+    color: var(--ax-text, #ececec); caret-color: var(--ax-accent, #7c9cff);
+    font: 13px/44px var(--ax-font-mono, ui-monospace, monospace);
+    outline: none;
+  }
+  .rb-term__input::placeholder { color: var(--ax-text-3, #8e8e8e); }
+  .rb-term__input--on { background: rgba(124,156,255,.12); }
+  .rb-term__xterm, .rb-term__fallback { inset: 0 0 46px 0; }
+  .rb-term__hint { display: none; }
+}
+
+/* 6. 技能页文字溢出（两处根因）：
+      a) .st-item-col 从来没有样式，卡片实际按 row 排 ——「头像 + 正文 + 操作 + 代码块」
+         全挤在同一行，文字被顶到卡片外；
+      b) .st-pre 也没有样式，<pre> 默认 white-space:pre 不换行，
+         SKILL_SPEC 这类长文本整段横向溢出。 */
+.st-item-col { flex-direction: column; align-items: stretch; }
+.st-item-extra { min-width: 0; max-width: 100%; }
+.st-sub { min-width: 0; }
+.st-row, .st-grow, .st-item-main { min-width: 0; }
+.st-pre {
+  margin: 8px 0 0; padding: 10px 12px; max-width: 100%;
+  border-radius: var(--ax-r-md, 12px);
+  background: rgba(255,255,255,.04);
+  border: 1px solid var(--ax-hairline, rgba(255,255,255,.06));
+  font: 12px/1.6 var(--ax-font-mono, ui-monospace, monospace);
+  color: var(--ax-text-2, #b4b4b4);
+  white-space: pre-wrap; word-break: break-word; overflow-wrap: anywhere;
+}
+@media (max-width: 760px) {
+  .st-item-actions { flex-wrap: wrap; }
+  .st-input, .st-select, .st-textarea { max-width: 100%; }
+  .st-item { padding: 12px 10px; gap: 10px; }
+}
+
+/* 7. 展开左侧栏时全屏变暗（用户反馈）：移动端左栏已走「点击外部关闭」逻辑，
+     不再需要 scrim 压暗；把 ≤900px 的 .ax-scrim 隐藏，并让左栏阴影代替视觉分层。
+     （shell.js 的 openMobileLeft/closeMobileLeft 本来就调用 scrim(false)，
+      这里是防御性 CSS：即便别处误加了 scrim 也不会再全屏变暗。） */
+@media (max-width: 900px) {
+  .ax-scrim { display: none !important; }
+  .ax-app.is-left-open-mobile .ax-leftbar {
+    box-shadow: var(--ax-shadow-pop, 0 24px 64px rgba(0,0,0,.55));
+  }
+}
+
+/* 8. 设置按钮「一半大一半小」补漏：桌面端（fine pointer）同样统一，
+     图标按钮固定 34×34、svg 16px；文字按钮 min-height 38px。 */
+@media (pointer: fine) {
+  .ax-iconbtn, .rb-iconbtn, .st-icon-btn {
+    width: 34px; height: 34px; min-width: 34px; min-height: 34px; padding: 0;
+  }
+  .st-btn { min-height: 38px; }
+}
+
+/* 9. API 配置浮层"悬浮在画面上层且没渲染完整"（用户反馈：只这一页有）。
+     根因：设置层 st-layer 的 z-index=var(--ax-z-modal,900)，
+     但 st-layer 内部若被 body 直挂的 ov-* 浮层（z 900+）或 .ax-toasts 盖住，
+     会出现"一部分在上层"的错位感。把设置层提到 950、toast 保持 1000 之上
+     仅 toast 可盖；同时给 st-panel 内部滚动加 overflow:hidden 兜底裁切，
+     防止长内容溢出到画面外。 */
+.st-layer { z-index: 950 !important; }
+.st-panel { overflow: hidden; }

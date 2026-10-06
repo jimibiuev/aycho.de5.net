@@ -1,0 +1,47 @@
+/* AYCHO module: css/ide-real | IDE 真实性层样式 */
+
+.rb-ide__xbtn { display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px; font-size: 12px; }
+.rb-ide__xbtn svg { display: block; }
+
+/* 工作区连接状态条 + 内置编译器徽章 */
+.rb-ide__net {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 10px; font-size: 11px; line-height: 1.6;
+  border-top: 1px solid var(--ax-line, #26303d);
+  background: var(--ax-bg-2, #0f141b);
+  color: var(--ax-dim, #8b98a8);
+  overflow-x: auto; white-space: nowrap;
+}
+.rb-ide__netdot { width: 7px; height: 7px; border-radius: 50%; background: #f87171; flex: 0 0 auto; }
+.rb-ide__netdot.is-on { background: #34d399; box-shadow: 0 0 0 3px rgba(52, 211, 153, .15); }
+.rb-ide__nettext { flex: 0 0 auto; }
+.rb-ide__netsplit { flex: 1 1 auto; min-width: 8px; }
+.rb-ide__cc {
+  flex: 0 0 auto; padding: 0 6px; border-radius: 999px;
+  border: 1px solid var(--ax-line, #26303d); color: var(--ax-dim, #8b98a8);
+  font: 10px/16px ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+.rb-ide__cc.is-on { color: #34d399; border-color: rgba(52, 211, 153, .45); background: rgba(52, 211, 153, .08); }
+
+/* 运行输出抽屉 */
+.rb-ide__out {
+  display: flex; flex-direction: column; max-height: 42%; min-height: 96px;
+  border-top: 1px solid var(--ax-line, #26303d); background: #0b0f14;
+}
+.rb-ide__out[hidden] { display: none; }
+.rb-ide__outhead {
+  display: flex; align-items: center; gap: 8px; padding: 5px 10px;
+  font-size: 11px; color: var(--ax-dim, #8b98a8);
+  border-bottom: 1px solid var(--ax-line, #26303d);
+}
+.rb-ide__outsp { flex: 1 1 auto; }
+.rb-ide__outbtn {
+  appearance: none; border: 1px solid var(--ax-line, #26303d); background: transparent;
+  color: inherit; font-size: 11px; padding: 1px 8px; border-radius: 6px; cursor: pointer;
+}
+.rb-ide__outbtn:hover { color: #cfe3ff; border-color: rgba(207, 227, 255, .4); }
+.rb-ide__outbody {
+  margin: 0; padding: 8px 10px; overflow: auto; flex: 1 1 auto;
+  font: 12px/1.55 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  white-space: pre-wrap; word-break: break-word; color: #cfe3ff;
+}

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="AYCHO">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7c9cff"/>
+      <stop offset=".55" stop-color="#a78bfa"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <radialGradient id="glow" cx=".5" cy=".35" r=".75">
+      <stop offset="0" stop-color="#7c9cff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#7c9cff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="#0a0c12"/>
+  <rect x="2.75" y="2.75" width="58.5" height="58.5" rx="15.25" fill="none" stroke="url(#g)" stroke-opacity=".45" stroke-width="1.5"/>
+  <circle cx="32" cy="26" r="22" fill="url(#glow)"/>
+  <circle cx="32" cy="32" r="21" fill="none" stroke="url(#g)" stroke-opacity=".35" stroke-width="1.2" stroke-dasharray="34 14"/>
+  <path d="M32 15 L45 48 H38.6 L36.1 41.6 H27.9 L25.4 48 H19 Z M29.6 36.2 H34.4 L32 29.4 Z"
+        fill="url(#g)"/>
+  <circle cx="49" cy="17" r="3.2" fill="#22d3ee" opacity=".9"/>
+</svg>

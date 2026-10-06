@@ -1,0 +1,81 @@
+/* ═══════════════════════════════════════════════════════════════════════════
+   AYCHO compliance layer —— emilkowalski/skills UI 规范统一收口
+   ═══════════════════════════════════════════════════════════════════════════
+   引入位置：所有模块样式之后（最后引入），用于把各模块的交互细节收敛到同一规范。
+   设计原则：只做「收敛与补齐」，不改变既有视觉方向与布局；不覆盖模块的配色与层级。
+
+   规范清单（对照 emilkowalski/skills）：
+     1. 进入动画 ease-out、退出动画 ease-in
+     2. 只动 transform / opacity / filter（避免 layout 属性动画）
+     3. 轮廓 = 半透明描边 + 分层阴影
+     4. 弹层从触发点 origin 生长（transform-origin）
+     5. 命中区 ≥ 44×44
+     6. 尊重 prefers-reduced-motion
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. 命中区 ≥44×44（规范 5）
+      仅在粗指针（触摸）设备生效：桌面端的鼠标精度高、且 UI 密度优先，
+      不做全量放大以免破坏既有布局；触摸端放大到 44 是可访问性硬基线。 ── */
+@media (pointer: coarse) {
+  .ax-btn, .ax-codebtn, .ax-minibtn, .ax-modelbtn,
+  .rb-btn, .rb-tab, .st-btn, .ov-btn,
+  .ax-chip, .ax-auth__link, .ax-inputwrap__act, .ax-conv__cog,
+  .ax-boot__skip {
+    min-height: 44px;
+  }
+  .ax-plus, .ax-send, .ax-stop, .ax-inputwrap__act, .ax-conv__cog {
+    min-width: 44px;
+  }
+  /* 统一图标按钮尺寸：此前只有部分按钮被放大，导致「一边大一边小」 */
+  .ax-iconbtn, .rb-iconbtn, .st-icon-btn, .ax-conv__cog {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ── 2. 触感反馈（规范 2）：按下仅动 transform，时长压缩到 90ms 保证跟手 ── */
+.ax-btn:active, .ax-codebtn:active, .ax-minibtn:active, .ax-modelbtn:active,
+.rb-btn:active, .rb-tab:active, .st-btn:active, .ov-btn:active,
+.ax-chip:active, .ax-auth__link:active {
+  transform: scale(.97);
+  transition-duration: 90ms;
+}
+
+/* ── 3. 键盘可达（无障碍）：可见焦点环，使用半透明强调色而非系统实线 ── */
+.ax-btn:focus-visible, .ax-codebtn:focus-visible, .ax-minibtn:focus-visible, .ax-modelbtn:focus-visible,
+.rb-btn:focus-visible, .rb-tab:focus-visible, .st-btn:focus-visible, .ov-btn:focus-visible,
+.ax-chip:focus-visible, .ax-auth__link:focus-visible, .ax-conv:focus-visible,
+.ax-input:focus-visible, .st-input:focus-visible {
+  outline: 2px solid var(--ax-accent, #ffffff);
+  outline-offset: 2px;
+  border-radius: inherit;
+}
+
+/* ── 4. 开屏品牌元素（assets/boot-mark.png）：图标内部文字与符号单独成层，
+      以遮罩方式填充品牌渐变，与光环同色系，保持等比缩放 ── */
+.ax-boot__element { pointer-events: none; }
+
+/* ── 5. prefers-reduced-motion 兜底（规范 6）
+      装饰性无限循环动画直接关闭；其余入场/过渡压缩到 1ms（保留终态，不做位移）。 ── */
+@media (prefers-reduced-motion: reduce) {
+  .ax-aurora,
+  .ax-boot__halo, .ax-boot__ring, .ax-boot__bar i,
+  .ax-blob::before, .ax-blob::after,
+  .ax-orb, .ax-orb::after, .ax-agentorb, .ax-dots i,
+  .ax-auth__spin, .ax-captcha__box.is-busy,
+  .ax-brand__logo::after, .ax-step__ico--run, .ax-stop::before {
+    animation: none !important;
+  }
+  .ax-boot, .ax-boot *,
+  .ax-app, .ax-app *,
+  .ax-auth, .ax-auth *,
+  .ax-sharepage, .ax-sharepage * {
+    animation-duration: 1ms !important;
+    animation-delay: 0ms !important;
+    transition-duration: 1ms !important;
+  }
+  /* 通用兜底：所有无限循环的装饰动画只播一次即停（覆盖上表未逐一点名的动效） */
+  .ax-boot *, .ax-app *, .ax-auth *, .ax-sharepage * {
+    animation-iteration-count: 1 !important;
+  }
+}

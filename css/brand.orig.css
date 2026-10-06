@@ -1,0 +1,126 @@
+/* AYCHO brand layer: 开屏动画 / 壳层 / 品牌图标素材接线 | owner: C | contract: v1 */
+/* 素材来源：官方仓库 github.com/jimibiuev/aycho（main 分支）下的 Android 资源，已本地化为 assets/*.png */
+
+*, *::before, *::after { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--ax-bg, #212121);
+  color: var(--ax-text, #e6e8ef);
+  font: 14px/1.55 var(--ax-font, -apple-system, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+body.ax-booting { overflow: hidden; }
+
+/* ---------- 开屏动画 ---------- */
+.ax-splash {
+  position: fixed; inset: 0; z-index: 9999;
+  display: grid; place-items: center;
+  background: var(--ax-bg, #212121);
+  transition: opacity 260ms var(--ax-ease-out, cubic-bezier(.22,1,.36,1));
+}
+.ax-splash.ax-out { opacity: 0; pointer-events: none; }
+.ax-splash-stack {
+  display: flex; flex-direction: column; align-items: center;
+  gap: clamp(16px, 4vw, 26px);
+}
+.ax-splash-icon {
+  width: clamp(96px, 26vw, 132px); height: auto; display: block;
+  opacity: 0; transform: scale(.92);
+  animation: ax-icon-in 380ms var(--ax-ease-out, cubic-bezier(.22,1,.36,1)) forwards;
+}
+.ax-splash-word {
+  width: clamp(150px, 40vw, 208px); height: auto; display: block;
+  opacity: 0; transform: translateY(8px);
+  animation: ax-word-in 320ms var(--ax-ease-out, cubic-bezier(.22,1,.36,1)) 120ms forwards;
+}
+@keyframes ax-icon-in { to { opacity: 1; transform: scale(1); } }
+@keyframes ax-word-in { to { opacity: 1; transform: translateY(0); } }
+.ax-splash-hint {
+  margin-top: 4px; font-size: 12px; letter-spacing: .08em;
+  color: var(--ax-text-3, #8e8e8e); opacity: 0;
+  animation: ax-word-in 320ms var(--ax-ease-out, cubic-bezier(.22,1,.36,1)) 220ms forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ax-splash-icon, .ax-splash-word, .ax-splash-hint { animation: none; opacity: 1; transform: none; }
+  .ax-splash { transition: none; }
+}
+
+/* ---------- 应用壳 ---------- */
+.ax-app { display: flex; flex-direction: column; min-height: 100%; }
+.ax-topbar {
+  position: sticky; top: 0; z-index: 20;
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; padding-top: calc(10px + env(safe-area-inset-top, 0px));
+  background: var(--ax-bg, #212121);
+  border-bottom: 1px solid var(--ax-hairline, rgba(255,255,255,.055));
+}
+.ax-brand { display: flex; align-items: center; gap: 9px; min-width: 0; }
+
+/* 应用图标（mipmap-xxxhdpi/ic_launcher_foreground.png，本地素材，由 CSS 承载） */
+.ax-brand-icon {
+  width: 26px; height: 26px; flex: none;
+  border-radius: 8px;
+  background-color: var(--ax-surface, #0e1117);
+  background-image: url(../assets/ic_launcher_foreground.png);
+  background-size: 20px 20px;
+  background-position: center;
+  background-repeat: no-repeat;
+  border: 1px solid var(--ax-border-soft, rgba(255,255,255,.06));
+}
+/* 字标（drawable/splash_wordmark.png，纯白图形，由 CSS 承载并置于深底） */
+.ax-brand-word {
+  width: clamp(74px, 20vw, 96px); height: clamp(35px, 9.5vw, 46px); flex: none;
+  background-image: url(../assets/splash_wordmark.png);
+  background-size: contain;
+  background-position: left center;
+  background-repeat: no-repeat;
+}
+.ax-topbar-spacer { flex: 1 1 auto; }
+.ax-btn {
+  appearance: none; border: 1px solid var(--ax-border-soft, rgba(255,255,255,.06));
+  background: var(--ax-surface, #0e1117); color: var(--ax-text, #e6e8ef);
+  border-radius: 10px; padding: 7px 12px; font-size: 13px; cursor: pointer;
+  font-family: inherit;
+  transition: transform 140ms var(--ax-ease-out, cubic-bezier(.22,1,.36,1)), border-color 140ms;
+}
+.ax-btn:hover { border-color: var(--ax-accent, #ffffff); }
+.ax-btn:active { transform: scale(.97); }
+.ax-btn:focus-visible { outline: 2px solid var(--ax-accent, #ffffff); outline-offset: 2px; }
+
+.ax-main { flex: 1 1 auto; width: 100%; max-width: 860px; margin: 0 auto; padding: 18px 14px 28px; }
+.ax-card {
+  background: var(--ax-surface, #0e1117);
+  border: 1px solid var(--ax-border-soft, rgba(255,255,255,.06));
+  border-radius: 14px; padding: 16px;
+}
+.ax-card + .ax-card { margin-top: 12px; }
+.ax-card h1 { margin: 0 0 6px; font-size: 17px; font-weight: 600; }
+.ax-card h2 { margin: 0 0 10px; font-size: 13px; font-weight: 600; color: var(--ax-text-3, #8e8e8e); }
+.ax-card p { margin: 0; color: var(--ax-text-3, #8e8e8e); }
+.ax-hero { display: flex; align-items: center; gap: 14px; }
+/* 图标作为主视觉（同样取本地素材） */
+.ax-hero-badge {
+  width: 46px; height: 46px; flex: none; border-radius: 12px;
+  background-color: var(--ax-bg, #212121);
+  background-image: url(../assets/ic_launcher_foreground.png);
+  background-size: 38px 38px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+.ax-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.ax-list li {
+  display: flex; align-items: baseline; gap: 8px;
+  padding: 7px 9px; border-radius: 9px;
+  background: var(--ax-bg-2, rgba(255,255,255,.018));
+  font-size: 13px; color: var(--ax-text-3, #8e8e8e);
+}
+.ax-list li b { color: var(--ax-text, #e6e8ef); font-weight: 500; }
+.ax-dot { width: 6px; height: 6px; border-radius: 50%; flex: none; background: #3ecf8e; align-self: center; }
+.ax-dot.ax-pending { background: #f0b429; }
+.ax-msg { display: flex; flex-direction: column; gap: 10px; }
+.ax-bubble { max-width: 86%; padding: 9px 12px; border-radius: 12px; font-size: 13.5px; }
+.ax-bubble.ax-u { align-self: flex-end; background: var(--ax-accent, #ffffff); color: #212121; }
+.ax-bubble.ax-a { align-self: flex-start; background: var(--ax-bg-2, rgba(255,255,255,.018)); border: 1px solid var(--ax-border-soft, rgba(255,255,255,.06)); }
+.ax-note { margin-top: 12px; font-size: 12px; color: var(--ax-text-3, #8e8e8e); }

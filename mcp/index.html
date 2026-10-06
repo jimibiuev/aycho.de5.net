@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<base href="../">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#06070b">
+<meta name="description" content="AYCHO — The agent can help you get everything done">
+<title>AYCHO · MCP 服务</title>
+<link rel="icon" href="./assets/ic_launcher_foreground.png" type="image/png">
+<link rel="apple-touch-icon" href="./assets/ic_launcher_foreground.png">
+
+<!-- 设计系统 → 基元 → 布局 → 页面 → B/C 模块 → 合规层（最后引入，统一 UI 规范） -->
+<link rel="stylesheet" href="./css/tokens.css">
+<link rel="stylesheet" href="./css/base.css">
+<link rel="stylesheet" href="./css/shell.css">
+<link rel="stylesheet" href="./css/auth.css">
+<link rel="stylesheet" href="./css/chat.css">
+<link rel="stylesheet" href="./css/panel-right.css"><!-- B -->
+<link rel="stylesheet" href="./css/settings.css"><!-- C -->
+<link rel="stylesheet" href="./css/overlay.css"><!-- C -->
+<link rel="stylesheet" href="./css/brand.css"><!-- 品牌素材类（本地 assets，无外链） -->
+<link rel="stylesheet" href="./css/compliance.css"><!-- 动效 / 命中区 / 分层轮廓 统一合规层 -->
+<link rel="stylesheet" href="./css/skill-ext.css"><!-- 技能扩展：槽位按钮 + 全屏确认页 -->
+<link rel="stylesheet" href="./css/overlays-fullscreen.css"><!-- 预览/分享/选择器 全屏化 -->
+<link rel="stylesheet" href="./css/ide-real.css"><!-- IDE 真实性层 -->
+</head>
+<body>
+
+<!-- ══════════ 动态极光背景（非视频，纯 CSS 动画） ══════════ -->
+<div class="ax-aurora" aria-hidden="true">
+  <span class="ax-aurora__blob ax-aurora__blob--1"></span>
+  <span class="ax-aurora__blob ax-aurora__blob--2"></span>
+  <span class="ax-aurora__blob ax-aurora__blob--3"></span>
+  <span class="ax-aurora__blob ax-aurora__blob--4"></span>
+  <span class="ax-aurora__blob ax-aurora__blob--5"></span>
+  <span class="ax-aurora__grain"></span>
+  <span class="ax-aurora__vignette"></span>
+</div>
+
+<!-- ══════════ 开屏动画（每次冷启动播放一次） ══════════ -->
+<div id="ax-boot" class="ax-boot" role="status" aria-label="正在启动 AYCHO">
+  <div class="ax-boot__stage">
+    <div class="ax-boot__halo"></div>
+    <div class="ax-boot__mark">
+      <span class="ax-boot__ring ax-boot__ring--1"></span>
+      <span class="ax-boot__ring ax-boot__ring--2"></span>
+      <span class="ax-boot__ring ax-boot__ring--3"></span>
+      <span class="ax-boot__core">
+        <span class="ax-boot__element" role="img" aria-label="AYCHO"></span>
+      </span>
+    </div>
+    <div class="ax-boot__word">
+      <span class="ax-boot__name">AYCHO</span>
+      <span class="ax-boot__slogan">The agent can help you get everything done</span>
+    </div>
+    <div class="ax-boot__bar"><i></i></div>
+  </div>
+  <button class="ax-boot__skip" type="button">跳过</button>
+</div>
+
+<!-- ══════════ 登录（auth.js 渲染） ══════════ -->
+<div id="ax-auth" class="ax-auth" hidden></div>
+
+<!-- ══════════ 主应用 ══════════ -->
+<div id="ax-app" class="ax-app" hidden>
+  <aside id="ax-leftbar" class="ax-leftbar"></aside>
+  <div class="ax-main">
+    <header id="ax-topbar" class="ax-topbar"></header>
+    <main id="ax-stage" class="ax-stage"></main>
+  </div>
+  <aside id="ax-rightbar" class="ax-rightbar"></aside>
+</div>
+
+<!-- ══════════ 分享只读页（#/s/<slug>） ══════════ -->
+<div id="ax-share-page" class="ax-sharepage" hidden></div>
+
+<!-- ══════════ 他人模块挂载点 ══════════ -->
+<div id="ax-overlay-host"></div><!-- C：预览 / 分享 / 元素选择 -->
+<div id="ax-settings-host"></div><!-- C：设置中心 -->
+
+<!-- ══════════ Toast ══════════ -->
+<div id="ax-toasts" class="ax-toasts" role="status" aria-live="polite"></div>
+
+<!-- ══════════ 脚本（顺序固定：地基 → 兼容层 → A → B → C → 启动） ══════════ -->
+<script>/* 子目录入口：打开即直达对应功能，地址栏随面板同步 */
+window.AYCHO_ROUTE = "settings:mcp"; window.AYCHO_SUBDIR = true;</script>
+<script src="./js/utils.js"></script>
+<script src="./js/store.js"></script>
+<script src="./js/compat.js"></script>
+<!-- 后端网关：部署期内置默认值，打开页面即自动连接，无需用户手填 -->
+<script>window.AYCHO_API_BASE = "https://aycho-gateway.onrender.com";</script>
+<script src="./js/api.js"></script>
+<script src="./js/sync.js"></script>
+
+<script src="./js/auth.js"></script>
+<script src="./js/shell.js"></script>
+<script src="./js/chat.js"></script>
+
+<script src="./js/rb-index.js"></script>
+<script src="./js/rb-terminal.js"></script>
+<script src="./js/rb-artifacts.js"></script>
+<script src="./js/rb-sharer.js"></script>
+<script src="./js/rb-files.js"></script>
+<script src="./js/rb-cloud.js"></script>
+<script src="./js/rb-browser.js"></script>
+<script src="./js/rb-ide.js"></script>
+
+<script src="./js/st-settings.js"></script>
+<script src="./js/st-api.js"></script>
+<script src="./js/st-skills.js"></script>
+<script src="./js/st-mcp.js"></script>
+<script src="./js/st-memory.js"></script>
+<script src="./js/st-general.js"></script>
+<script src="./js/st-advanced.js"></script>
+<script src="./js/ov-share.js"></script>
+<script src="./js/ov-preview.js"></script>
+<script src="./js/ov-picker.js"></script>
+
+<script src="./js/boot.js"></script>
+<script src="./js/skill-ext.js"></script>
+<script src="./js/ide-real.js"></script><!-- IDE 真实性：真实工作区 + 真运行 -->
+</body>
+</html>

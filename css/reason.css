@@ -1,0 +1,162 @@
+/* AYCHO · 推理等级滑块（极光渐变 + 粒子特效）+ 思考过程展开样式
+ * 设计目标：可拖动的进度条，6 档英文等级（Off → Max），晶莹极光质感，圆点持续外冒粒子。
+ */
+
+/* ---------------------------------------------------------------- 滑块容器 */
+.ax-rsn {
+  --rsn-pos: 60%;
+  padding: 12px 13px 12px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .055), rgba(255, 255, 255, .018));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .07), 0 6px 18px rgba(0, 0, 0, .22);
+  border: 1px solid rgba(255, 255, 255, .07);
+}
+.ax-rsn__top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px; }
+.ax-rsn__title {
+  font-size: 11px; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ax-dim, #8b93a7); font-weight: 600;
+}
+.ax-rsn__val {
+  font-size: 13px; font-weight: 700; letter-spacing: .02em;
+  background: linear-gradient(90deg, #5eead4, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+  filter: drop-shadow(0 0 8px rgba(120, 180, 255, .35));
+}
+
+/* ---------------------------------------------------------------- 轨道 */
+.ax-rsn__rail {
+  position: relative; height: 30px; border-radius: 15px;
+  background: rgba(255, 255, 255, .05);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, .38), inset 0 0 0 1px rgba(255, 255, 255, .055);
+  cursor: pointer; touch-action: none; user-select: none; -webkit-user-select: none;
+}
+.ax-rsn__rail:focus-visible { outline: 2px solid rgba(150, 195, 255, .75); outline-offset: 3px; }
+
+/* 极光渐变进度填充（晶莹：顶部高光 + 外发光） */
+.ax-rsn__fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: var(--rsn-pos);
+  border-radius: 15px; overflow: hidden;
+  background: linear-gradient(90deg, #5eead4 0%, #60a5fa 32%, #a78bfa 62%, #f0abfc 82%, #f472b6 100%);
+  box-shadow: 0 0 16px rgba(96, 165, 250, .42), inset 0 0 10px rgba(255, 255, 255, .18);
+  transition: width .18s cubic-bezier(.22, .8, .3, 1);
+}
+.ax-rsn__fill::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .42), rgba(255, 255, 255, 0) 58%);
+  mix-blend-mode: screen; opacity: .75;
+}
+/* 极光流动光带 */
+.ax-rsn__aura {
+  position: absolute; left: 0; right: 0; top: 0; bottom: 0; border-radius: 15px;
+  pointer-events: none; overflow: hidden; opacity: .55;
+}
+.ax-rsn__aura i {
+  position: absolute; top: -40%; width: 34%; height: 180%;
+  background: radial-gradient(ellipse at center, rgba(255, 255, 255, .5), rgba(255, 255, 255, 0) 68%);
+  filter: blur(4px); animation: axRsnAura 5.2s linear infinite;
+}
+.ax-rsn__aura i:nth-child(2) { animation-delay: -2.6s; }
+@keyframes axRsnAura {
+  0% { left: -40%; opacity: 0; }
+  22% { opacity: .85; }
+  100% { left: 108%; opacity: 0; }
+}
+
+/* 粒子画布（圆点外冒的粒子特效） */
+.ax-rsn__fx { position: absolute; left: 0; top: 0; width: 100%; height: 100%; pointer-events: none; }
+
+/* 刻度点 */
+.ax-rsn__ticks {
+  position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between;
+  padding: 0 12px; pointer-events: none;
+}
+.ax-rsn__ticks i { width: 4px; height: 4px; border-radius: 50%; background: rgba(255, 255, 255, .3); }
+.ax-rsn__ticks i.is-on { background: rgba(255, 255, 255, .85); box-shadow: 0 0 6px rgba(255, 255, 255, .8); }
+
+/* 圆点（knob） */
+.ax-rsn__knob {
+  position: absolute; top: 50%; left: var(--rsn-pos); width: 22px; height: 22px; margin-left: -11px;
+  transform: translateY(-50%); border-radius: 50%; cursor: grab;
+  background: radial-gradient(circle at 33% 28%, #fff, rgba(255, 255, 255, .78) 44%, rgba(150, 195, 255, .55) 100%);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, .5), inset 0 0 0 1px rgba(255, 255, 255, .55),
+    0 0 14px rgba(130, 190, 255, .75), 0 0 26px rgba(167, 139, 250, .35);
+  transition: left .18s cubic-bezier(.22, .8, .3, 1), transform .14s ease, box-shadow .2s ease;
+  outline: none;
+}
+.ax-rsn__knob::after {
+  content: ""; position: absolute; inset: -7px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(140, 200, 255, .28), rgba(140, 200, 255, 0) 70%);
+  pointer-events: none;
+}
+.ax-rsn.is-drag .ax-rsn__fill, .ax-rsn.is-drag .ax-rsn__knob { transition: none; }
+.ax-rsn.is-drag .ax-rsn__knob { transform: translateY(-50%) scale(1.14); cursor: grabbing; box-shadow: 0 3px 14px rgba(0, 0, 0, .55), inset 0 0 0 1px rgba(255, 255, 255, .7), 0 0 20px rgba(150, 205, 255, .95), 0 0 40px rgba(190, 140, 255, .5); }
+
+/* ---------------------------------------------------------------- 刻度文字 */
+.ax-rsn__scale {
+  display: flex; justify-content: space-between; margin-top: 7px;
+  font-size: 10px; letter-spacing: .01em; color: var(--ax-dim, #8b93a7); white-space: nowrap;
+}
+.ax-rsn__scale span { transition: color .16s ease, transform .16s ease; }
+.ax-rsn__scale span.is-on { color: #fff; font-weight: 700; text-shadow: 0 0 10px rgba(150, 200, 255, .7); }
+
+.ax-rsn__hint { margin-top: 7px; font-size: 11px; line-height: 1.5; color: var(--ax-dim, #8b93a7); white-space: normal; overflow-wrap: anywhere; }
+.ax-rsn__eff { margin-top: 5px; font-size: 11px; line-height: 1.55; color: #93c5fd; white-space: normal; overflow-wrap: anywhere; word-break: break-word; }
+.ax-rsn__eff code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: #a5b4fc; }
+.ax-rsn__eff.is-warn { color: #fca5a5; }
+.ax-rsn__eff.is-warn code { color: #fda4af; }
+
+/* 思考模式行内提示（×2 消耗） */
+.ax-menu__cost { display: block; margin-top: 2px; font-size: 11px; color: #fbbf24; }
+
+/* ---------------------------------------------------------------- 思考过程折叠块 */
+.ax-reason {
+  margin-top: 8px; border-radius: 12px; overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .08);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .012));
+  transition: border-color .2s ease, box-shadow .2s ease;
+}
+.ax-reason.is-open { border-color: rgba(140, 190, 255, .28); box-shadow: 0 0 0 1px rgba(120, 170, 255, .08), 0 6px 20px rgba(0, 0, 0, .22); }
+.ax-reason__head {
+  display: flex; align-items: center; gap: 7px; width: 100%; padding: 8px 11px;
+  background: none; border: 0; cursor: pointer; text-align: left; color: var(--ax-dim, #9aa4b8);
+  font-size: 12px; font-family: inherit;
+}
+.ax-reason__head:hover { color: #dbe4f5; }
+.ax-reason__head .ax-chev { display: inline-flex; transition: transform .18s ease; }
+.ax-reason.is-open .ax-reason__head .ax-chev { transform: rotate(90deg); }
+.ax-reason__live {
+  display: inline-flex; align-items: center; gap: 5px; margin-left: auto;
+  font-size: 11px; color: #7dd3fc;
+}
+.ax-reason__live em { width: 6px; height: 6px; border-radius: 50%; background: #38bdf8; box-shadow: 0 0 8px #38bdf8; animation: axReasonPulse 1.1s ease-in-out infinite; }
+@keyframes axReasonPulse { 0%, 100% { opacity: .35; transform: scale(.85); } 50% { opacity: 1; transform: scale(1.15); } }
+.ax-reason__body {
+  padding: 2px 12px 11px 30px; font-size: 12.5px; line-height: 1.72; color: #9fb0c9;
+  white-space: pre-wrap; word-break: break-word; max-height: 340px; overflow: auto;
+  border-top: 1px solid rgba(255, 255, 255, .05);
+}
+.ax-reason__body p { margin: 0 0 6px; }
+.ax-reason__body::-webkit-scrollbar { width: 6px; }
+.ax-reason__body::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, .14); border-radius: 3px; }
+.ax-reason__meta { padding: 0 12px 9px 30px; font-size: 10.5px; color: #6f7c92; display: flex; gap: 10px; flex-wrap: wrap; }
+.ax-reason__meta code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+
+/* 流式思考时正文的错误提示条 */
+.ax-effbar {
+  display: flex; align-items: center; gap: 6px; margin: 6px 0 2px;
+  font-size: 11px; color: #93c5fd;
+}
+.ax-effbar.is-warn { color: #fca5a5; }
+.ax-effbar code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10.5px; color: #a5b4fc; }
+
+/* 思考模式关闭：滑块降饱和，明示「推理参数不会下发」 */
+.ax-rsn.is-mute .ax-rsn__fill { filter: saturate(.22) brightness(.82); box-shadow: none; }
+.ax-rsn.is-mute .ax-rsn__aura { opacity: .18; }
+.ax-rsn.is-mute .ax-rsn__fx { opacity: .28; }
+.ax-rsn.is-mute .ax-rsn__knob { opacity: .8; }
+.ax-rsn.is-mute .ax-rsn__val { filter: grayscale(.7); }
+
+/* 六档英文刻度：窄屏也不换行挤爆 */
+.ax-rsn__scale { font-size: 9.5px; padding: 0 1px; }
+.ax-rsn__scale span { flex: 0 0 auto; }
+@media (max-width: 360px) { .ax-rsn__scale { font-size: 8.5px; letter-spacing: -.01em; } }
